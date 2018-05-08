@@ -1,0 +1,15 @@
+{
+	"name": "chapter2",
+	"version": "1.0.0",
+	"description": "mern cookbook",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"author": "Eddy Wilson",
+	"license": "MIT",
+	"dependencies": {
+		"body-parser": "1.18.2",
+		"express": "4.16.3"
+	}
+}
