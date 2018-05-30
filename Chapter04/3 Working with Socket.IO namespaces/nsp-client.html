@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Socket.IO Client</title>
+</head>
+<body>
+	<h1 id="title"></h1>
+	<p id="msg"></p>
+	<button id="toggleLang">Get Content in Spanish</button>
+	<script src="http://localhost:1337/socket.io/socket.io.js"></script>
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	<script type="text/babel">
+		const title = document.getElementById('title')
+		const msg = document.getElementById('msg')
+		const btn = document.getElementById('toggleLang')
+		const manager = new io.Manager(
+			'http://localhost:1337',
+			{ path: '/socket.io' },
+		)
+		const socket = manager.socket('/en')
+
+		manager.socket('/en')
+		manager.socket('/es')
+
+		socket.on('connect', () => {
+			socket.emit('getData')
+		})
+		socket.on('data', (data) => {
+			title.textContent = data.title
+			msg.textContent = data.msg
+		})
+		btn.addEventListener('click', (event) => {
+			socket.nsp = socket.nsp === '/en'
+				? '/es'
+				: '/en'
+			btn.textContent = socket.nsp === '/en'
+				? 'Get Content in Spanish'
+				: 'Get Content in English'
+			socket.close()
+			socket.open()
+		})
+	</script>
+</body>
+</html>

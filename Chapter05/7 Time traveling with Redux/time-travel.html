@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Time travel</title>
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	<script src="/lib/redux.js"></script>
+</head>
+<body>
+	<h1>Counter: <span id="counter"></span></h1>
+	<script type="text/babel">
+		const counterElem = document.querySelector('#counter')
+
+		const {
+			createStore,
+			bindActionCreators,
+		} = Redux
+
+		const TYPE = {
+			INC_COUNTER: 'INC_COUNTER',
+			DEC_COUNTER: 'DEC_COUNTER',
+		}
+
+		const actions = {
+			incCounter: (by) => ({ type: TYPE.INC_COUNTER, by }),
+			decCounter: (by) => ({ type: TYPE.DEC_COUNTER, by }),
+		}
+
+		const reducer = (state = { value: 5 }, action) => {
+			switch (action.type) {
+				case TYPE.INC_COUNTER:
+					return { value: state.value + action.by }
+				case TYPE.DEC_COUNTER:
+					return { value: state.value - action.by }
+				default:
+					return state
+			}
+		}
+
+		const store = createStore(
+			reducer,
+			(
+				window.__REDUX_DEVTOOLS_EXTENSION__ &&
+				window.__REDUX_DEVTOOLS_EXTENSION__()
+			),
+		)
+		const {
+			incCounter,
+			decCounter,
+		} = bindActionCreators(actions, store.dispatch)
+
+		store.subscribe(() => {
+			const state = store.getState()
+			counterElem.textContent = state.value
+		})
+
+		for (let i = 0; i < 10; i++) {
+			const incORdec = (Math.random() * 10) > 5
+			if (incORdec) incCounter(2)
+			else decCounter(1)
+		}
+	</script>
+</body>
+</html>

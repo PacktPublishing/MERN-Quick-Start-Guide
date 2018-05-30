@@ -1,0 +1,9 @@
+{
+  "name": "chapter4",
+  "version": "1.0.0",
+  "description": "mern cookbook",
+  "main": "index.js",
+  "scripts": {},
+  "author": "Eddy Wilson",
+  "license": "MIT"
+}

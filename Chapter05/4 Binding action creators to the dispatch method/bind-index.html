@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Binding action creators</title>
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	<script src="/lib/redux.js"></script>
+</head>
+<body>
+	<h1>List:</h1>
+	<form id="item-form">
+		<input id="item-input" name="item" />
+	</form>
+	<ul id="list"></ul>
+	<script type="text/babel">
+		const form = document.querySelector('#item-form')
+		const input = document.querySelector('#item-input')
+		const list = document.querySelector('#list')
+		const initialState = {
+			items: [],
+		}
+		const TYPE = {
+			ADD_ITEM: 'ADD_ITEM',
+		}
+		const actions = {
+			addItem: (text) => ({
+				type: TYPE.ADD_ITEM,
+				text,
+			})
+		}
+		const reducer = (state = initialState, action) => {
+			switch (action.type) {
+				case TYPE.ADD_ITEM: return {
+					items: [...state.items, action.text].splice(-5)
+				}
+				default: return state
+			}
+		}
+		const { createStore, bindActionCreators } = Redux
+		const store = createStore(reducer)
+		const { addItem } = bindActionCreators(
+			actions,
+			store.dispatch,
+		)
+
+		store.subscribe(() => {
+			const { items } = store.getState()
+			items.forEach((itemText, index) => {
+				const li = (
+					list.children.item(index) ||
+					document.createElement('li')
+				)
+				li.textContent = itemText
+				list.insertBefore(li, list.children.item(0))
+			})
+		})
+
+		form.addEventListener('submit', (event) => {
+			event.preventDefault()
+			addItem(input.value)
+		})
+	</script>
+</body>
+</html>

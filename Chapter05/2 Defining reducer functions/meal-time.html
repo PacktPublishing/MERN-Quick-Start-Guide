@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Breakfast Time</title>
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+</head>
+<body>
+	<h1>What you need to do:</h1>
+	<p>
+		<b>Current time:</b>
+		<span id="display-time"></span>
+	</p>
+	<p id="display-meal"></p>
+	<button id="emulate-night">
+		Let's pretend is 00:00:00
+	</button>
+	<button id="emulate-noon">
+		Let's pretend is 12:00:00
+	</button>
+	<script type="text/babel">
+		let state = {
+			kindOfMeal: null,
+			time: null,
+		}
+		const meal = document.getElementById('display-meal')
+		const time = document.getElementById('display-time')
+		const btnNight = document.getElementById('emulate-night')
+		const btnNoon = document.getElementById('emulate-noon')
+
+		const SET_MEAL = 'SET_MEAL'
+		const SET_TIME = 'SET_TIME'
+
+		const setMeal = (kindOfMeal) => ({
+			type: SET_MEAL,
+			kindOfMeal,
+		})
+		const setTime = (time) => ({
+			type: SET_TIME,
+			time,
+		})
+
+		const reducer = (prevState = state, action) => {
+			switch (action.type) {
+				case SET_MEAL:
+					return Object.assign({}, prevState, {
+						kindOfMeal: action.kindOfMeal,
+					})
+				case SET_TIME:
+					return Object.assign({}, prevState, {
+						time: action.time,
+					})
+				default:
+					return prevState
+			}
+		}
+
+		const onStateChange = (nextState) => {
+			const comparison = [
+				{ time: '23:00:00', info: 'Too late for dinner!' },
+				{ time: '18:00:00', info: 'Dinner time!' },
+				{ time: '16:00:00', info: 'Snacks time!' },
+				{ time: '12:00:00', info: 'Lunch time!' },
+				{ time: '10:00:00', info: 'Branch time!' },
+				{ time: '05:00:00', info: 'Breakfast time!' },
+				{ time: '00:00:00', info: 'Too early for breakfast!' },
+			]
+			time.textContent = nextState.time
+			meal.textContent = comparison.find((condition) => (
+				nextState.time >= condition.time
+			)).info
+		}
+
+		const dispatch = (action) => {
+			state = reducer(state, action)
+			onStateChange(state)
+		}
+
+		btnNight.addEventListener('click', () => {
+			const time = new Date('1/1/1 00:00:00')
+			dispatch(setTime(time.toTimeString()))
+		})
+		btnNoon.addEventListener('click', () => {
+			const time = new Date('1/1/1 12:00:00')
+			dispatch(setTime(time.toTimeString()))
+		})
+
+		dispatch(setTime(new Date().toTimeString()))
+	</script>
+</body>
+</html>

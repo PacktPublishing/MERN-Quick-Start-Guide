@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Socket.IO Client</title>
+</head>
+<body>
+	<h1 id="title">
+		Connected clients:
+		<span id="n"></span>
+	</h1>
+	<p id="welcome"></p>
+	<script src="http://localhost:1337/socket.io/socket.io.js"></script>
+	<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+	<script type="text/babel">
+		const welcome = document.getElementById('welcome')
+		const n = document.getElementById('n')
+
+		const manager = new io.Manager(
+			'http://localhost:1337',
+			{ path: '/socket.io' },
+		)
+		const socket = manager.socket('/')
+
+		socket.on('welcome', msg => {
+			welcome.textContent = msg
+		})
+		socket.on('updateClientCount', clientsCount => {
+			n.textContent = clientsCount
+		})
+	</script>
+</body>
+</html>
