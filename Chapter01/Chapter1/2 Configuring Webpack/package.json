@@ -14,7 +14,7 @@
     "@babel/preset-env": "7.0.0-beta.42",
     "babel-loader": "8.0.0-beta.2",
     "webpack": "4.1.1",
-    "webpack-cli": "2.0.12"
+    "webpack-cli": "5.0.1"
   },
   "dependencies": {
     "chalk": "2.3.2",
